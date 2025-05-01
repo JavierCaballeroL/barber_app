@@ -18,6 +18,21 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <%= image_tag "logo.png", alt: "Barber app", height: 40 %>
+        </a>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">Página principal</a>
+            </li>
+          </ul>
+        <div class="d-flex ms-auto gap-2">
+          <a href="#" class="btn btn-outline-light">Login</a>
+          <a href="#" class="btn btn-outline-light">Registro</a>
+        </div>
+      </div>
+    </nav>
   </body>
 </html>

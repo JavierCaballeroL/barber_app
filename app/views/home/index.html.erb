@@ -1,8 +1,11 @@
 
 <div class="container text-center my-4">
     <h1 class="display-4">Bienvenido a Barbería Javier</h1>
-    <p class="lead">(if user_signed_in) Reserva una cita aquí</p>
-    <p class="lead">(else) Regístrate si aún no tienes una cuenta o inicia sesión si ya tienes una</p>
+    <% if user_signed_in? %>
+        <a class="lead text-reset" href="/appointments">Reserva una cita aquí</a>
+    <% else %>
+        <a class="lead text-reset" href="/sign_up">Regístrate si aún no tienes una cuenta</a> o <a class="lead text-reset" href="/sign_in">inicia sesión si ya tienes una</a>
+    <% end %>
 </div>
 
 <div class="container d-flex justify-content-center">
@@ -35,3 +38,4 @@
     </button>
     </div>
 </div>
+<br/><br/><br/>

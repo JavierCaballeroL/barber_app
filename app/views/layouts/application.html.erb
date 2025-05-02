@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Barber App" %></title>
+    <%= favicon_link_tag 'favicon.ico' %>
+    <title><%= content_for(:title) || "Barbería Javier" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -10,36 +11,118 @@
     <%= yield :head %>
 
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body style="background-color: #e1e1e1";>
-    <nav class="navbar navbar-dark bg-dark navbar-expand-lg bg-body-tertiary">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <%= image_tag "logo.png", alt: "Barber app", height: 40 %>
-        </a>
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link fa-solid fa-house" aria-current="page" href="#"><i class="fa fa-home" aria-hidden="true"></i>&nbsp; Página principal</a>
-            </li>
-          </ul>
-        <div class="d-flex ms-auto gap-2">
-          <a href="#" class="btn btn-outline-light">Iniciar sesión</a>
-          <a href="#" class="btn btn-outline-light">Registro</a>
-        </div>
-      </div>
-    </nav>
+  <body class="d-flex flex-column min-vh-100" style="background-color: #e1e1e1";>
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+      <%= image_tag "logo.png", alt: "Barber app", height: 40 %>
+    </a>
+
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row">
+      <li class="nav-item me-3">
+        <a class="nav-link" aria-current="page" href="/"><i class="fa fa-home" aria-hidden="true"></i> Página principal</a>
+      </li>
+      <li class="nav-item me-3">
+        <a class="nav-link" aria-current="page" href="/info"><i class="fa fa-info-circle" aria-hidden="true"></i> Información</a>
+      </li>
+      <% if user_signed_in? %>
+        <li class="nav-item me-3">
+          <a class="nav-link" href="/appointments"><i class="fa fa-address-book" aria-hidden="true"></i> Pedir cita</a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="d-flex ms-auto align-items-center gap-2">
+      <% if user_signed_in? %>
+        <span class="text-white">
+          <a class="nav-link text-white" href="/users/<%= current_user.id %>">
+            <i class="fa fa-user"></i> <%= current_user.email %>
+          </a>
+        </span>
+        <%= button_to "Cerrar sesión", destroy_user_session_path, method: :delete, class: "btn btn-outline-light" %>
+      <% else %>
+        <a href="/login" class="btn btn-outline-light">Iniciar sesión</a>
+        <a href="/sign_up" class="btn btn-outline-light">Registro</a>
+      <% end %>
+    </div>
+  </div>
+</nav>
+    
+
+
+
+
+
+  
     <%= yield %>
     <% if notice %>
-      <p class="alert alert-info"><%= notice %></p>
+      <div class="flash-notice flash-message">
+        <%= notice %>
+        <button class="close-flash" onclick="this.parentElement.style.display='none';"><i class="fa fa-times"></i></button>
+      </div>
     <% end %>
+
     <% if alert %>
-      <p class="alert alert-danger"><%= alert %></p>
+      <div class="flash-alert flash-message">
+        <%= alert %>
+        <button class="close-flash" onclick="this.parentElement.style.display='none';"><i class="fa fa-times"></i></button>
+      </div>
     <% end %>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+      <div class="container">
+        <p>&copy; <%= Time.now.year %> Barbería Javier. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
   </body>
 </html>
+
+<style>
+  .flash-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f8d7da; /* Color de fondo para alertas */
+    color: #721c24;  /* Color de texto */
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 90%;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .flash-notice {
+    background-color: #d4edda; /* Color verde para 'notice' */
+    color: #155724; /* Texto en verde */
+  }
+
+  .flash-alert {
+    background-color: #f8d7da; /* Color rojo para 'alert' */
+    color: #721c24; /* Texto en rojo */
+  }
+  .close-flash {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #000;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 15px;
+  }
+
+  .close-flash:hover {
+    color: #555;
+  }
+
+</style>

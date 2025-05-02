@@ -17,7 +17,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body style="background-color: #e1e1e1";>
     <nav class="navbar navbar-dark bg-dark navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
@@ -25,14 +25,21 @@
         </a>
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="#">Página principal</a>
+              <a class="nav-link fa-solid fa-house" aria-current="page" href="#"><i class="fa fa-home" aria-hidden="true"></i>&nbsp; Página principal</a>
             </li>
           </ul>
         <div class="d-flex ms-auto gap-2">
-          <a href="#" class="btn btn-outline-light">Login</a>
+          <a href="#" class="btn btn-outline-light">Iniciar sesión</a>
           <a href="#" class="btn btn-outline-light">Registro</a>
         </div>
       </div>
     </nav>
+    <%= yield %>
+    <% if notice %>
+      <p class="alert alert-info"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+      <p class="alert alert-danger"><%= alert %></p>
+    <% end %>
   </body>
 </html>

@@ -57,4 +57,6 @@ group :test do
 end
 
 gem 'bootstrap', '~> 5.0.0'
+gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.9'
 gem "sassc-rails"
+gem 'devise', '~> 4.9.4'

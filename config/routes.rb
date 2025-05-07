@@ -7,9 +7,9 @@ Rails.application.routes.draw do
 
   root to: "home#index"
 
+  resources :users, only: [:show]
+  get "/appointments", to: "appointments#index"
 
 
-
-  # Defines the root path route ("/")
 
 end

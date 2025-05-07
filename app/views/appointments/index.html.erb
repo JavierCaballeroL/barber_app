@@ -1,0 +1,96 @@
+<div class="container my-5">
+  <h2 class="text-center">Reserva tu cita</h2>
+  <div id="calendar"></div>
+</div>
+
+<!-- Modal para reservar la cita -->
+<div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="appointmentModalLabel">Reservar cita</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>Has seleccionado: <strong id="selected-date"></strong></p>
+        <!-- Agregar un campo para mostrar la hora -->
+        <p>Hora: <strong id="selected-time"></strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <!-- Botón para hacer la reserva -->
+        <form action="/appointments" method="POST" id="reserve-form">
+          <input type="hidden" name="date" id="modal-date">
+          <input type="hidden" name="time" id="modal-time">
+          <button type="submit" class="btn btn-primary">Reservar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'timeGridWeek',
+      locale: 'es',
+      selectable: true,
+      firstDay: 1,
+      titleFormat: { day: 'numeric', month: 'long', year: 'numeric' },
+      slotMinTime: "10:00:00",
+      slotMaxTime: "21:00:00",
+      allDaySlot: false,
+      slotLabelFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      },
+      height: 'auto',
+      headerToolbar: {
+        left: 'prev',
+        center: 'title',
+        right: 'next'
+      },
+      // Cuando un usuario haga clic en una hora
+      dateClick: function (info) {
+        // Mostrar la fecha en el modal
+        const selectedDate = info.dateStr;
+        document.getElementById('selected-date').textContent = selectedDate;
+        
+        // No mostrar la hora, ya que es un día completo
+        document.getElementById('selected-time').textContent = '';
+        
+        // Rellenar los campos ocultos del formulario con la fecha
+        document.getElementById('modal-date').value = selectedDate;
+        
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+        modal.show();
+      },
+      // Cuando se hace clic en una celda de hora
+      eventClick: function (info) {
+        // Obtener la fecha y hora de la cita
+        const selectedDateTime = info.event.start;
+        const selectedDate = selectedDateTime.toLocaleDateString();
+        const selectedTime = selectedDateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        // Actualizar los campos del modal con la información de la hora seleccionada
+        document.getElementById('selected-date').textContent = selectedDate;
+        document.getElementById('selected-time').textContent = selectedTime;
+
+        // Rellenar los campos ocultos del formulario con la fecha y hora
+        document.getElementById('modal-date').value = selectedDate;
+        document.getElementById('modal-time').value = selectedTime;
+
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
+        modal.show();
+      }
+    });
+
+    // Renderizar el calendario
+    calendar.render();
+  });
+</script>

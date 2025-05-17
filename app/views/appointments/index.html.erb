@@ -1,12 +1,12 @@
 <div class="container my-5">
   <h2 class="text-center">Reserva tu cita</h2>
-  <div id="calendar" style="background-color: white;"></div>
+  <div id="calendar" class="border rounded-3 shadow p-3 bg-light" ></div>
 </div>
 
 <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <%= form_with url: appointments_path, method: :post do |f| %>
+      <%= form_with url: appointments_path, method: :post, remote: true, data: { turbo: false } do |f| %>
         <div class="modal-header">
           <h5 class="modal-title" id="appointmentModalLabel">Reservar cita</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>

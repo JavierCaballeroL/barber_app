@@ -10,8 +10,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show]
   resources :appointments, only: [:index, :create, :destroy]
 
-  patch "/perfil", to: "users#update", as: :update_profile
-
+  get 'admin', to: 'admin#index'
 
 
 end

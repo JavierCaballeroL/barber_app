@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   root to: "home#index"
 
   resources :users, only: [:show]
-  get "/appointments", to: "appointments#index"
+  resources :appointments, only: [:index, :create, :destroy]
+
+  patch "/perfil", to: "users#update", as: :update_profile
 
 
 

@@ -6,26 +6,42 @@
 <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="appointmentModalLabel">Reservar cita</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        <p>Has seleccionado: <strong id="selected-date"></strong></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Reservar</button>
-      </div>
+      <%= form_with url: appointments_path, method: :post do |f| %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="appointmentModalLabel">Reservar cita</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p>Has seleccionado: <strong id="selected-date"></strong></p>
+          <%= hidden_field_tag :datetime, "", id: "appointment_fechahora" %>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <%= f.submit "Reservar", class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
 
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const existingAppointments = <%= raw(@appointments.map { |a|
+    {
+      title: 'Ocupado',
+      start: a.scheduled_at,
+      end: (a.scheduled_at + 30.minutes),
+      backgroundColor: '#ff4d4d',
+      textColor: 'black',
+      editable: false,
+      overlap: false
+    }
+  }.to_json) %>;
     const calendarEl = document.getElementById('calendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
+        events: existingAppointments,
         initialView: 'timeGridWeek',
         locale: 'es',
         selectable: true,
@@ -33,6 +49,16 @@
         titleFormat: { day: 'numeric', month: 'long', year: 'numeric' },
         slotMinTime: "10:00:00",
         slotMaxTime: "21:00:00",
+        selectAllow: function (selectInfo) {
+        const overlapping = calendar.getEvents().some(event => {
+            return (
+              event.display === 'background' &&
+              event.start < selectInfo.end &&
+              event.end > selectInfo.start
+            );
+          });
+          return !overlapping;
+        },
         allDaySlot: false,
         slotDuration: "00:30:00",
         slotLabelInterval: "00:30",
@@ -71,7 +97,21 @@
         ],
         selectConstraint: "businessHours",
       select: function (info) {
-        document.getElementById('selected-date').textContent = info.dateStr;
+        const fechaHoraSeleccionada = info.startStr;
+        const fechaHora = new Date(info.start);
+        const opciones = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        };
+        const fechaFormateada = fechaHora.toLocaleString('es-ES', opciones);
+
+        document.getElementById('selected-date').textContent = fechaFormateada;
+        document.getElementById('appointment_fechahora').value = fechaHoraSeleccionada;
 
         const modal = new bootstrap.Modal(document.getElementById('appointmentModal'));
         modal.show();

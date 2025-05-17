@@ -2,22 +2,22 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: javier
-  password: inves
-  host: localhost
-  port: 5432
+  username: <%= Rails.application.credentials.dig(:db, :username) %>
+  password: <%= Rails.application.credentials.dig(:db, :password) %>
+  host: <%= Rails.application.credentials.dig(:db, :host) %>
+  port: <%= Rails.application.credentials.dig(:db, :port) %>
 
 development:
   <<: *default
-  database: db_peluqueria
+  database: <%= Rails.application.credentials.dig(:db, :database) %>
 
 test:
   <<: *default
-  database: db_peluqueria
+  database: <%= Rails.application.credentials.dig(:db, :database) %>
 
 production:
   <<: *default
-  database: db_peluqueria
-  username: javier
-  password: inves
-  host: localhost
+  database: <%= Rails.application.credentials.dig(:db, :database) %>
+  username: <%= Rails.application.credentials.dig(:db, :username) %>
+  password: <%= Rails.application.credentials.dig(:db, :password) %>
+  host: <%= Rails.application.credentials.dig(:db, :host) %>

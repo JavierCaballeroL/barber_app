@@ -2,11 +2,15 @@
     <h1>Administración de la barbería</h1><br/>
     <div class="container">
         <div class="border rounded-3 shadow p-3 bg-light" style="max-width: 400px;">
-            <select class="selectpicker" data-live-search="true">
-                <option>Mustard</option>
-                <option>Ketchup</option>
-                <option>Barbecue</option>
+            <%= form_with url: destroy_multiple_users_path, method: :delete do %>
+            <select class="selectpicker form-control" name="user_ids[]" multiple data-live-search="true" title="Selecciona uno o varios usuarios">
+                <% User.all.order(:email).each do |usuario| %>
+                    <option value="<%= usuario.id%>"><%= usuario.email %></option>
+                <% end %>
             </select>
+            <br/><br/>
+            <%= submit_tag "Eliminar seleccionados", class: "btn btn-danger" %>
+            <% end %>
         </div>
     </div>
 </div>
@@ -14,6 +18,7 @@
 
 <script>
 document.addEventListener("turbo:load", function () {
-  $('.selectpicker').selectpicker();
-});
+    $('.selectpicker').selectpicker();
+  });
+
 </script>

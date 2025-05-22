@@ -11,6 +11,5 @@ Rails.application.routes.draw do
   resources :appointments, only: [:index, :create, :destroy]
 
   get 'admin', to: 'admin#index'
-
-
+  
 end

@@ -1,24 +1,83 @@
-<div class="container mt-5">
-    <h1>Administración de la barbería</h1><br/>
-    <div class="container">
-        <div class="border rounded-3 shadow p-3 bg-light" style="max-width: 400px;">
-            <%= form_with url: destroy_multiple_users_path, method: :delete do %>
-            <select class="selectpicker form-control" name="user_ids[]" multiple data-live-search="true" title="Selecciona uno o varios usuarios">
-                <% User.all.order(:email).each do |usuario| %>
-                    <option value="<%= usuario.id%>"><%= usuario.email %></option>
-                <% end %>
-            </select>
-            <br/><br/>
-            <%= submit_tag "Eliminar seleccionados", class: "btn btn-danger" %>
-            <% end %>
-        </div>
-    </div>
+<div class="container my-5">
+  <div class="text-center">
+    <h1 class="display-4 fw-bold">
+      <i class="bi bi-gear-fill me-2"></i> Administración de la Barbería
+    </h1>
+    <p class="lead text-muted">Panel de control para gestionar usuarios, citas y servicios</p>
+  </div>
 </div>
 
+<div class="container my-5">
+  <div class="row justify-content-between">
+    
+    <div class="col-md-4">
+      <div class="mb-4">
+        <div class="border rounded-3 shadow p-3 bg-light">
+          <h5><i class="bi bi-person-fill-dash me-2"></i>Eliminar usuarios</h5>
+          <%= form_with url: destroy_user_path, method: :delete do %>
+            <select class="form-control form-select mt-3" name="user_id" title="Selecciona un usuario">
+              <option disabled selected>-- Selecciona un usuario --</option>
+              <% User.all.order(:email).each do |usuario| %>
+                <option value="<%= usuario.id %>"><%= usuario.email %></option>
+              <% end %>
+            </select>
+            <div class="mt-3">
+              <%= button_tag type: 'submit', class: "btn btn-danger w-100" do %>
+                <i class="bi bi-trash me-2"></i>Eliminar
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
 
-<script>
-document.addEventListener("turbo:load", function () {
-    $('.selectpicker').selectpicker();
-  });
+      <div>
+        <div class="border rounded-3 shadow p-3 bg-light">
+          <h5><i class="bi bi-calendar-minus me-2"></i>Cancelar citas</h5>
+          <%= form_with url: cancel_appointment_path, method: :delete do %>
+            <select class="form-control form-select mt-3" name="appointment_id" title="Selecciona una cita">
+              <option disabled selected>-- Selecciona una cita para cancelar --</option>
+              <% Appointment.where("scheduled_at > ?", Time.now).order(:scheduled_at).each do |cita| %>
+                <option value="<%= cita.id %>"><%= l(cita.scheduled_at, format: "%A, %-d de %B a las %H:%M").capitalize %></option>
+              <% end %>
+            </select>
+            <div class="mt-3">
+              <%= button_tag type: 'submit', class: "btn btn-danger w-100" do %>
+                <i class="bi bi-trash me-2"></i>Cancelar
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
 
-</script>
+    <div class="col-md-6">
+      <div class="border rounded-3 shadow p-4 bg-light h-100">
+        <h5 class="text-center">Tarifas de servicios</h5>
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col" style="width: 100px;">Precio</th>
+                        <th scope="col" style="width: 50px;">Editar</th>
+                        <th scope="col" style="width: 50px;">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% Service.all.each do |service| %>
+                    <tr>
+                        <td><%= service.name %></td>
+                        <td><%= number_to_currency(service.price, unit: "€") %></td>
+                        <td style="text-align: center;"><button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal-<%= service.id %>"><i class="bi bi-pencil-square"></i></button></td>
+                        <td style="text-align: center;"><button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-<%= service.id %>"><i class="bi bi-trash"></i></button></td>
+                    </tr>
+                    <%= render 'edit_delete_modals', service: service %>
+                    <% end %>
+                </tbody>
+            </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+

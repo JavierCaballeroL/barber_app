@@ -1,7 +1,14 @@
 <div class="container mt-5">
-  <h1>¡Bienvenido, <%= @user.first_name %> <%= @user.last_name %>!</h1><br/>
-  <div class="container">
-    <div class="border rounded-3 shadow p-3 bg-light" style="max-width: 400px;">
+  <div class="text-center mb-4">
+    <h1 class="display-5 fw-semibold text-dark">
+      <i class="bi bi-person-circle me-2"></i>
+      ¡Bienvenido, <%= @user.first_name %> <%= @user.last_name %>!
+    </h1>
+    <p class="text-muted lead">Aquí puedes consultar tus datos personales y tus citas</p>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <div class="border rounded-4 shadow p-4 bg-light" style="width: 100%; max-width: 450px;">
       <div class="mb-3">
         <label for="userEmail" class="form-label">Tu email</label>
         <input type="text" id="userEmail" class="form-control" value="<%= current_user.email %>" readonly>
@@ -11,15 +18,17 @@
         <label for="userName" class="form-label">Tu nombre y apellidos</label>
         <input type="text" id="userName" class="form-control" value="<%= current_user.first_name %> <%= current_user.last_name %>" readonly>
       </div>
-
     </div>
   </div>
+</div>
 
-  <div class="container" style="margin-top: 50px;">
+
+  <div class="container" style="margin-top: 50px; margin-bottom: 50px;">
   <div class="row">
     <div class="col-md-6">
       <% if current_user.appointments.any? %>
-        <h2>Tus citas programadas</h2><br/>
+        <h2 style="text-align: center;">Tus citas programadas</h2><br/>
+        <div class="d-flex flex-column align-items-center">
         <% current_user.appointments.where("scheduled_at > ?", Time.current).each do |appointment| %>
           <div class="border rounded-3 shadow p-3" style="height: 100px; border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border-radius: 6px; width: 400px; background-color: #f8f9fa;">
             <%= image_tag "logo.png", alt: "Barber app", style: "width: 60px; height: 60px; object-fit: contain;" %>
@@ -38,12 +47,14 @@
       <% else %>
         <h2>No tienes citas programadas</h2>
       <% end %>
+      </div>
     </div>
 
     <div class="col-md-6">
       <% past_appointments = current_user.appointments.where("scheduled_at <= ?", Time.current) %>
       <% if past_appointments.any? %>
-        <h2>Tus citas pasadas</h2><br/>
+        <h2 style="text-align: center;">Tus citas pasadas</h2><br/>
+        <div class="d-flex flex-column align-items-center">
         <% past_appointments.each do |appointment| %>
           <div class="border rounded-3 shadow p-3" style="height: 100px; border: 1px solid #ccc; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; border-radius: 6px; width: 400px; background-color: #f8f9fa;">
             <%= image_tag "logo.png", alt: "Barber app", style: "width: 60px; height: 60px; object-fit: contain;" %>
@@ -59,6 +70,7 @@
       <% else %>
         <h2>No tienes citas pasadas</h2><br/>
       <% end %>
+      </div>
     </div>
   </div>
 </div>

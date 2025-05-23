@@ -1,0 +1,47 @@
+<div class="modal fade" id="deleteModal-<%= service.id %>" tabindex="-1" aria-labelledby="deleteLabel-<%= service.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteLabel-<%= service.id %>">¿Estás seguro de que quieres eliminar el servicio "<strong><%= service.name %></strong>"?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <%= button_to delete_service_path(service), method: :delete, form_class: "d-inline", class: "btn btn-danger" do %>
+                    Eliminar
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal-<%= service.id %>" tabindex="-1" aria-labelledby="editLabel-<%= service.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editLabel-<%= service.id %>">Editar servicio</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <%= form_with model: service, url: update_service_path(service), method: :patch do |f| %>
+                    <div class="mb-3">
+                        <%= f.label :name, "Nombre del servicio" %>
+                        <%= f.text_field :name, class: "form-control" %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :description, "Descripcion del servicio" %>
+                        <%= f.text_field :description, class: "form-control" %>
+                    </div>
+                    <div class="mb-3">
+                        <%= f.label :price, "Precio (€)" %>
+                        <%= f.number_field :price, class: "form-control", step: 1.00 %>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <%= f.submit "Guardar cambios", class: "btn btn-primary" %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>

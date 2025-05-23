@@ -1,14 +1,25 @@
 
-<div class="container text-center my-4">
-    <h1 class="display-4">Bienvenido a Barbería Javier</h1>
-    <% if user_signed_in? %>
-        <%= link_to "/appointments", class: "lead text-reset", data: { turbo: "false" } do %>
-            Pide cita aquí
-        <% end %>
+<div class="container text-center my-5">
+  <h1 class="display-4 fw-bold text-dark">
+    <i class="bi bi-scissors me-2"></i> Bienvenido a Barbería Javier
+  </h1>
+  <p class="lead text-muted mb-4">Cortes modernos, estilo clásico. Tu look comienza aquí.</p>
 
-    <% else %>
-        <a class="lead text-reset" href="/sign_up">Regístrate si aún no tienes una cuenta</a> o <a class="lead text-reset" href="/sign_in">inicia sesión si ya tienes una</a>
+  <% if user_signed_in? %>
+    <%= link_to "/appointments", class: "btn btn-success btn-lg", data: { turbo: "false" } do %>
+      <i class="bi bi-calendar-plus me-2"></i> Pide tu cita
     <% end %>
+  <% else %>
+    <p class="lead">
+      <a class="btn btn-outline-primary me-2" href="/sign_up">
+        <i class="bi bi-person-plus-fill me-1"></i> Regístrate
+      </a>
+      o
+      <a class="btn btn-outline-secondary ms-2" href="/login">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Inicia sesión
+      </a>
+    </p>
+  <% end %>
 </div>
 
 <div class="container d-flex justify-content-center">

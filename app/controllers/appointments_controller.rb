@@ -12,7 +12,7 @@ class AppointmentsController < ApplicationController
   respond_to do |format|
     if appointment_datetime.present? && appointment_datetime > Time.current
       if @appointment.save
-        format.html { redirect_to appointments_path, notice: "Cita reservada correctamente" }
+        format.html { redirect_to user_path(current_user), notice: "Cita reservada correctamente" }
         format.js
       else
         format.html { redirect_to appointments_path, alert: "No se pudo reservar la cita" }

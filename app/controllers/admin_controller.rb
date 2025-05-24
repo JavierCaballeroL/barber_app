@@ -1,7 +1,7 @@
 class AdminController < ApplicationController
   before_action :authorize_admin!
   def index
-    @service = Service.all
+    @services = Service.all
   end
 
   def destroy_user
@@ -11,7 +11,7 @@ class AdminController < ApplicationController
     else
       flash[:alert] = "No se seleccionó un usuario"
     end
-    redirect_to "/admin"
+    redirect_to admin_path
   end
 
   def cancel_appointment
@@ -21,10 +21,11 @@ class AdminController < ApplicationController
     else
       flash[:alert] = "No se seleccionó una cita"
     end
-    redirect_to "/admin"
+    redirect_to admin_path
   end
 
   def delete_service
+    @service = Service.find(params[:id])
     @service.destroy
     redirect_to admin_path, notice: "Servicio eliminado correctamente."
   end
@@ -33,10 +34,20 @@ class AdminController < ApplicationController
 
     @service = Service.find(params[:id])
 
-    if @service.update(params.require(:service).permit(:name, :description, :price))
+    if @service.update(service_params)
       redirect_to admin_path, notice: "Servicio actualizado correctamente."
     else
       redirect_to admin_path, alert: "Error al actualizar el servicio."
+    end
+  end
+
+  def create_service
+    @service = Service.new(service_params)
+
+    if @service.save
+      redirect_to admin_path, notice: "Servicio creado correctamente"
+    else
+      redirect_to admin_path, alert: "Error al crear el servicio"
     end
   end
 
@@ -46,6 +57,10 @@ class AdminController < ApplicationController
     unless current_user&.role == "admin"
       redirect_to root_path, alert: "Acceso no autorizado"
     end
+  end
+  
+  def service_params
+    params.require(:service).permit(:name, :description, :price)
   end
 
 end

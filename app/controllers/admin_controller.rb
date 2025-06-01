@@ -5,14 +5,20 @@ class AdminController < ApplicationController
   end
 
   def destroy_user
-    if params[:user_id].present?
-      User.where(id: params[:user_id]).delete_all
-      flash[:notice] = "Usuario eliminado correctamente"
+  if params[:user_id].present?
+    user = User.find_by(id: params[:user_id])
+    if user
+      user.destroy
+      flash[:notice] = "Usuario eliminado correctamente junto con sus citas."
     else
-      flash[:alert] = "No se seleccionó un usuario"
+      flash[:alert] = "Usuario no encontrado."
     end
-    redirect_to admin_path
+  else
+    flash[:alert] = "No se seleccionó un usuario."
   end
+  redirect_to admin_path
+end
+
 
   def cancel_appointment
     if params[:appointment_id].present?
